@@ -5,7 +5,9 @@ namespace App\Controller;
 
 use App\Amqp\Producer\DemoProducer;
 use Hyperf\Amqp\Consumer;
+use Hyperf\Amqp\Message\DynamicRpcMessage;
 use Hyperf\Amqp\Producer;
+use Hyperf\Amqp\RpcClient;
 use Hyperf\HttpServer\Annotation\AutoController;
 
 /**
@@ -35,5 +37,14 @@ class AmqpController extends AbstractController
     {
         $consumer = $this->container->get(Consumer::class);
         $consumer->consumer();
+    }
+
+    public function rpc()
+    {
+        $rpcClient = $this->container->get(RpcClient::class);
+        // todo cant get rpcClient;
+        $result = $rpcClient->call(new DynamicRpcMessage('hyperf', 'hyperf', ['message' => 'Hello Hyperf'.time()]));
+        var_dump($result);
+        return $result;
     }
 }
